@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Tienda de Artículos Electrónicos-Xavier</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet" />
+  <style>
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #2c3e50; /* azul marino claro */
+      color: #212529;
+      line-height: 1.5;
+      padding: 0 10px 40px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: black; /* fondo negro sólido */
+      color: white;
+      padding: 15px 30px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.8rem;
+      user-select: none;
+      box-shadow: 0 3px 7px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 15px;
+      z-index: 100;
+
+      border: 3px solid white;
+      border-radius: 12px;
+      width: fit-content;
+      margin-top: 15px;
+      /* No background-clip text, use JS colored spans for rainbow */
+    }
+
+    .intro {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 15px 0;
+      max-width: 350px;
+      width: 100%;
+    }
+
+    .intro-text {
+      font-size: 1.2rem;
+      margin-right: 10px;
+      color: #007bff;
+    }
+
+    .intro-image {
+      width: 50px; /* tamaño ajustable */
+      height: 50px;
+      object-fit: cover;
+    }
+
+    main {
+      flex: 1;
+      margin-top: 15px;
+      max-width: 350px;
+      width: 100%;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease;
+      cursor: pointer;
+      height: 100%;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 8px 20px rgba(0,123,255,0.3);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      background-color: #e9ecef;
+    }
+
+    .product-info {
+      padding: 10px 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .product-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      color: #007bff;
+      min-height: 38px;
+    }
+
+    .product-price {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #28a745;
+      margin-bottom: 6px;
+    }
+
+    .product-description {
+      font-size: 0.8rem;
+      color: #6c757d;
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-height: 40px;
+    }
+
+    footer {
+      text-align: center;
+      color: #6c757d;
+      font-size: 0.8rem;
+      margin-top: auto;
+      padding: 15px 0;
+      user-select: none;
+      max-width: 350px;
+      width: 100%;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 400px) {
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+      }
+      .product-image {
+        height: 100px;
+      }
+      .product-name {
+        font-size: 0.85rem;
+      }
+      .product-price {
+        font-size: 0.85rem;
+      }
+      .product-description {
+        font-size: 0.75rem;
+        max-height: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header id="rainbow-header">Tienda de Artículos Electrónicos - Xavier</header>
+  <div class="intro">
+    <div class="intro-text">Hola bienvenido a mi tienda de tecnología</div>
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhBxDx2XtWS1kMPkiqss24vLlWNDPrcgIrpq_2Y1oT5GzXOtcvRNtVcKO5ZxYMi5EgQ6G8Fjww36KfvCKIeIsCDxegPR1yF6ePRsy-LZAi0dZaDANyPPwv50TWLPJdd5W7x-m2m0-bXWdqq/s1600/NID.png" class="intro-image" />
+  </div>
+  <main>
+    <div class="products-grid" id="products-grid">    </div>
+  </main>
+  <footer>© 2025 XavierXd.Todos los derechos reservados son mio we xd.</footer>
+
+  <script>    const header = document.getElementById('rainbow-header');
+    const text = header.textContent;
+    header.textContent = ''; // clear content
+    const colors = ['#e21400', '#f5a623', '#f8e71c', '#7ed321', '#50e3c2', '#4a90e2', '#9013fe'];
+
+    for (let i = 0; i < text.length; i++) {
+      const span = document.createElement('span');
+      span.textContent = text[i];
+      if(text[i] === ' ') span.style.color = 'white';
+      else span.style.color = colors[i % colors.length];
+      header.appendChild(span);
+    }
+
+    const productsGrid = document.getElementById('products-grid');
+
+    const products = [
+     
+
+{name:"Smartphone Galaxy X1",description:"Pantalla AMOLED de 6.5\", cámara triple 48MP, y batería de larga duración.",price:"$499.99",image:"https://i.ytimg.com/vi/gpWbFOFFL2M/maxresdefault.jpg"},
+      {name:"Laptop UltraBook Pro",description:"Procesador i7 de 11va generación, 16GB RAM, SSD de 512GB, para máxima productividad.",price:"$1199.00",image:"https://http2.mlstatic.com/D_NQ_NP_654535-MLA46168986731_052021-O.webp"},
+      {name:"Auriculares Bluetooth AirWave",description:"Sonido de alta fidelidad, cancelación de ruido activa y hasta 20 horas de autonomía.",price:"$149.99",image:"https://en.langsdom.com/wp-content/uploads/2024/06/BE10%E9%BB%91%E8%89%B2.jpg"},
+      {name:"Smartwatch FitTime 3",description:"Monitorea tu actividad y salud con GPS, pantalla táctil resistente al agua.",price:"$199.95",image:"https://consumer.huawei.com/dam/content/dam/huawei-cbg-site/common/mkt/pdp/wearables/watch-fit3/images/bigtitle/huawei-watch-fit-3-title-2.jpg"},
+      {name:"Cámara Digital ZoomX 24MP",description:"Captura imágenes nítidas con zoom óptico 10x y grabación en 4K.",price:"$349.50",image:"https://m.media-amazon.com/images/I/41kOBJI0HNL._AC_UY1000_.jpg"},
+      {name:"Parlante Bluetooth BoomSound",description:"Audio potente con bajos profundos, batería recargable y diseño portátil.",price:"$89.90",image:"https://s1.elespanol.com/2022/07/22/elandroidelibre/moviles-android/analisis/689691262_225992871_1706x1280.jpg"},
+      {name:"Tablet Pro 11 pulgadas",description:"Ideal para trabajo y entretenimiento, con soporte para lápiz digital.",price:"$539.00",image:"https://i5.walmartimages.com/seo/2021-Apple-11-inch-iPad-Pro-Wi-Fi-Cellular-512GB-Space-Gray-3rd-Generation_31d1b67b-be21-4492-b6c3-4533a7997005.9cc9dc004bf1c91226b2d54ff1a4b042.jpeg"},
+      {name:"Disco Duro Externo 2TB",description:"Almacenamiento seguro con conexión USB 3.0 y diseño compacto.",price:"$99.99",image:"https://www.idcmayoristas.com/wp-content/uploads/2021/03/DISCO-DURO-2TB-SATA-ADATA-EXT-2.5-HD330-USB-3.0-ANTIGOLPES-BLACK.png"},
+      {name:"Teclado Mecánico Retroiluminado",description:"Diseño ergonómico, switches táctiles y luces RGB personalizables.",price:"$129.50",image:"https://lavictoria.ec/wp-content/uploads/2023/01/TECLADO-GAMING-SEMI-MECANICO-RETROILUMINADO-KB464L-1.jpg"},
+      {name:"Ratón Inalámbrico Ergonomico",description:"Movimiento preciso, carga rápida y formato cómodo para largas horas.",price:"$59.99",image:"https://www.radioshack.com.ec/media/catalog/product/2/6/2604736_03_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=700&width=700&canvas=700:700"},
+      {name:"Monitor 27\" 4K UHD",description:"Pantalla ultra nítida con gama de colores amplia y tiempo de respuesta rápido.",price:"$399.00",image:"https://m.media-amazon.com/images/I/81pXhUjZW7L.jpg"},
+      {name:"Cámara de Seguridad SmartCam",description:"Vigilancia HD con visión nocturna y alertas en tiempo real.",price:"$129.99",image:"https://m.media-amazon.com/images/I/61jMLrK4baL.jpg"},
+      {name:"Router WiFi 6 Dual Band",description:"Conexión rápida y estable para múltiples dispositivos en el hogar.",price:"$179.95",image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2Tn5CqP5e6yP4tVgoTgHNPfIQIVUxLD9kpA&s"},
+      {name:"Impresora Multifuncional InkJet",description:"Imprime, escanea y copia con calidad profesional y conectividad WiFi.",price:"$149.00",image:"https://www.artefacta.com/media/catalog/product/l/3/l3250_b_nbgpkwy4v0ssufkm.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=1040&width=1040&canvas=1040:1040"},
+      {name:"Power Bank 10000mAh",description:"Carga rápida para tus dispositivos donde sea que estés.",price:"$39.99",image:"https://maxitec.vtexassets.com/arquivos/ids/199638/maxitec-chargeworx-power-bank-compacto-de-10000mah-con-usb-c-power-delivery-y-quick-charge-cx6852bk-1.jpg?v=638811114658600000"},
+
+
+      {name:"Smart TV 50\" LED",description:"Resolución Full HD, sistema operativo inteligente con apps preinstaladas.",price:"$499.95",image:"https://electromegaecuador.com/5728-large_default/televisor-lg-50-pulgadas-smart-tv-led-ultra-hd-4k-bluetooth-50ur7800.jpg"},
+
+      {name:"Lentes de Realidad Virtual VRX",description:"Experimenta juegos y videos en 3D con alta comodidad y gráficos.",price:"$299.00",image:"https://www.realovirtual.com/pictures/2022/09/63344d06d5800.jpg"},
+
+      {name:"Altavoz Inteligente VoicePod",description:"Control por voz, conectividad con asistentes y sonido claro.",price:"$99.95",image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGZlXRax0tKKQ-Wc4EVMthVsk4XaNr6FmKSQ&s"},
+
+      {name:"Consola de Videojuegos GameBox",description:"Procesador potente y catálogo de juegos exclusivos.",price:"$399.99",image:"https://www.tabletpc.ec/4581-large_default/mini-consola-sup-game-box.jpg"},
+
+      {name:"Cámara Deportiva ActionCam",description:"Graba tus aventuras en alta definición con protección impermeable.",price:"$179.90",image:"https://kywiec.vtexassets.com/arquivos/ids/198471/560823.jpg?v=638530446135900000"},
+
+
+      {name:"Dron QuadX Pro",description:"Vuelo estable, cámara HD, y fácil de controlar para principiantes.",price:"$349.99",image:"https://i5.walmartimages.com/seo/Cooligg-S168-X-Drone-Quadcopter-Mavic-Pro-with-RC-720p-HD-Camera-2MP-WIFI-FPV-Foldable-Arm-Selfie-6-Axis-3PCS-Batteries_b599fc92-8720-4714-9b70-eb4cb584b823.809549113c8f6aa68bb729a0ff76cc2b.jpeg"},
+
+      {name:"SSD Interno 1TB",description:"Almacenamiento rápido para mejorar el rendimiento del sistema.",price:"$129.99",image:"https://m.media-amazon.com/images/I/71zZPfG0fnL._AC_SL1500_.jpg"},
+
+      {name:"Adaptador USB-C MultiPuerto",description:"Conexión versátil para cargar y conectar múltiples dispositivos.",price:"$49.99",image:"https://xtech-frontend.s3.amazonaws.com/media/img/Image-Color-XTC-565.png"},
+
+      {name:"Cámara Web HD 1080p",description:"Videollamadas claras con micrófono integrado y enfoque automático.",price:"$59.99",image:"https://m.media-amazon.com/images/I/61dAkngibfL._AC_SL1500_.jpg"},
+
+      {name:"Smartphone ZoomMax 5G",description:"Cámara con zoom óptico 5x y conectividad 5G ultrarrápida.",price:"$599.00",image:"https://m.media-amazon.com/images/I/61YB4Sjh6+L.jpg"},
+
+      {name:"Tableta Gráfica ArtistPad",description:"Ideal para diseño digital, con lápiz sensible a la presión.",price:"$229.99",image:"https://m.media-amazon.com/images/I/51SoCqQbE8L._AC_SL1000_.jpg"},
+
+      {name:"Altavoz Stereo SoundMax",description:"Sonido envolvente para tu música favorita con conexión Bluetooth.",price:"$75.00",image:"https://www.radioshackla.com/media/catalog/product/4/0/4001740_00.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=700&width=700&canvas=700:700"},
+    
+      {name:"Altavoz Inalámbrico PartyBlaster",description:"Audio potente y luces LED para animar cualquier fiesta.",price:"$129.00",image:"https://cdn.t-nb.com/image/upload/c_pad,w_550,h_550/VISUEL_HD/HPPARTYBLAST/03303170117682_C1L0_s01.jpg"},
+
+      {name:"Mouse Pad RGB Gaming",description:"Superficie amplia iluminada con efectos de color personalizables.",price:"$39.90",image:"https://thermaltake-de-bhgycxg9djfgcmfn.a02.azurefd.net/media/catalog/product/cache/023a745bb14092c479b288481f91a1bd/l/2/l20mousepad01.jpg"},
+
+      {name:"Lámpara Led SmartLight",description:"Control de brillo y color via app, compatible con asistentes de voz.",price:"$49.95",image:"https://m.media-amazon.com/images/I/61BI5sNYHeL._AC_SL1500_.jpg"},
+
+      {name:"Disco Duro SSD NVMe 2TB",description:"La máxima velocidad para tu PC o workstation profesional.",price:"$329.00",image:"https://novedadeskaren.ec/wp-content/uploads/2023/09/ktc-product-ssd-snv2s-2000g-3-lg.jpg"},
+
+      {name:"Tablet para Dibujo ArtPad",description:"Pantalla sensible a lápiz con alta resolución para artistas digitales.",price:"$259.99",image:"https://www.ubuy.ec/productimg/?image=aHR0cHM6Ly9tLm1lZGlhLWFtYXpvbi5jb20vaW1hZ2VzL0kvMzFCT2Y0bDVVb0wuX1NTNDAwXy5qcGc.jpg"},
+    
+      {name:"Altavoz Bluetooth Clip",description:"Compacto, con mosquetón para llevar a todas partes con gran sonido.",price:"$39.99",image:"https://mibodega.ec/4735-home_default/jbl-clip-4-altavoz-portatil-con-buetooth-resistente-al-agua.jpg"},
+
+      {name:"Gafas VR NextGen",description:"Realidad virtual avanzada con seguimiento de movimiento preciso.",price:"$399.50",image:"https://img.medicalexpo.es/images_me/photo-g/4581693-19683729.jpg"},
+
+      {name:"Cámara Retro Vintage",description:"Estilo clásico con tecnología moderna para un toque único.",price:"$209.00",image:"https://px-web-images2.pixpa.com/TFzBakCbC-8PAmq-wQhLWe554ssm7XgTkaj20sAEFhw/rs:fit:1200:0/q:80/aHR0cHM6Ly9waXhwYWNvbS1pbWcucGl4cGEuY29tL2NvbS9hcnRpY2xlcy8xNTM3MTcwNDMzLTQ5MTY5MC1zY3JlZW4tc2hvdC0yMDE4LTA5LTE3LWF0LTExNjQ4LXBtcG5nLmpwZw=="},
+
+      {name:"Power Bank UltraSlim",description:"Ligera y potente para recargar dispositivos con estilo.",price:"$45.00",image:"https://m.media-amazon.com/images/I/61lOM27IfSL.jpg"},
+
+      {name:"Router Mesh Home",description:"Cobertura WiFi amplia y velocidad constante en toda la casa.",price:"$289.99",image:"https://catalogo.claro.com.ec/uploads/imgs/productos/wifi-mesh-fiber-home-2-nodos/negro/zoom/02-wifi-mesh-fiber-home-2-nodos-negro-side.png"},
+
+      {name:"Smartwatch Elegance",description:"Diseño sofisticado con todas las funciones inteligentes.",price:"$249.99",image:"https://oneclick.com.py/upload/produtos/8acdcb699ec4add1235cf2992feaf36e.jpg"},
+      
+      {name:"Tablet Multimedia Max",description:"Gran pantalla y sonido para disfrutar de películas y juegos.",price:"$349.99",image:"https://lavictoria.ec/wp-content/uploads/2024/08/TABLET-DE-10P-3GB-64GB-4G-PAD10-MAX-SKY-1.jpg"},
+
+      {name:"Cámara de Seguridad Inteligente",description:"Acceso remoto y detección de movimiento en HD.",price:"$119.99",image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvud0LhGke-A_uLQ275wHwWH_F8XFJwriGdQ&s"},
+
+      {name:"Teclado Gamer Compacto",description:"Teclas rápidas y retroiluminación para la mejor experiencia de juego.",price:"$99.00",image:"https://coretms.tecnomegastore.ec/assets/images/main/24/KEYLOG920011921.webp"},
+
+      {name:"Mouse Inalámbrico Silent",description:"Diseño ergonómico y clics silenciosos para oficina y hogar.",price:"$39.95",image:"https://www.tecnosmart.com.ec/wp-content/uploads/2023/07/MOU0581.jpg"},
+
+      {name:"Mini Proyector Portátil",description:"Lleva tus presentaciones y películas a donde quieras.",price:"$109.99",image:"https://elbarbaro.ec/wp-content/uploads/2021/01/51RiyeqRQNL.jpg"},
+
+      {name:"Auriculares Gaming Pro",description:"Sonido envolvente y micrófono para comunicación clara.",price:"$129.95",image:"https://www.mtec-ec.com/wp-content/uploads/2020/09/097855151032.jpg"},
+
+      {name:"Cámara de lapiz USB",description:"Snapea fotos y videos con un diseño compacto.",price:"$49.90",image:"https://m.media-amazon.com/images/I/51K3cXA76rL._AC_UF894,1000_QL80_.jpg"},
+
+      {name:"Disco duro para videojuegos",description:"Almacenamiento rápido para tus juegos favoritos.",price:"$109.00",image:"https://m.media-amazon.com/images/I/61Bs79axk5L._AC_UF894,1000_QL80_.jpg"},
+
+      {name:"Altavoz para Smartphone",description:"Mantén la fiesta viva con sonido potente fácil de llevar.",price:"$69.99",image:"https://i5.walmartimages.com/asr/88547f9e-65bc-4939-82e1-8e510c7c22a1_1.8853338c45a86ab9794249af7f0e33a0.jpeg"},
+
+      {name:"Teléfono móvil resistente",description:"Diseñado para condiciones extremas, resistente al agua y golpes.",price:"$279.99",image:"https://m.media-amazon.com/images/I/81h5hAqp8wL.jpg"},
+
+      {name:"Smartwatch de lujo",description:"Materiales premium con funciones inteligentes de salud y conectividad.",price:"$399.99",image:"https://tusmartwatch.digital/wp-content/uploads/2021/04/Smartwatch-de-lujo-1.jpeg"}
+,
+      {name:"Lápiz óptico para tablets",description:"Precisión profesional para dibujo y notas digitales.",price:"$49.00",image:"https://www.idcmayoristas.com/wp-content/uploads/2023/04/LAPIZ-OPTICO-005515.png"},
+
+      {name:"Cámara de acción 360°",description:"Captura cada ángulo con videos y fotos panorámicas.",price:"$329.95",image:"https://fotoacces.com/wp-content/uploads/2024/10/SKU3158-Foto-2.jpg"},
+
+      {name:"Altavoz inteligente compacto",description:"Controla tu hogar inteligente con un dispositivo pequeño y potente.",price:"$89.90",image:"https://tecnomarket.ec/cdn/shop/files/descarga_46_2d398706-2f36-4d41-9fdf-dfee106a45e8.png?v=1690872925"},
+
+      {name:"Soporte para Laptop ajustable",description:"Mejora la ergonomía y ventilación de tu equipo.",price:"$29.99",image:"https://nanotech-market.com/wp-content/uploads/2023/01/Lime-Green-and-Black-Active-Hype-Personal-Fitness-Coach-Instagram-Post-2023-01-26T134004.455.png"},
+
+      {name:"Teclado para programadores",description:"Diseño cómodo y teclas configurables para coders.",price:"$115.00",image:"https://crehana-blog.imgix.net/media/filer_public/da/26/da26c581-6577-4a37-a458-4ab7b66b13ee/kinesis.jpg?auto=format&q=50"},
+
+      {name:"Cámara para drones",description:"Grabación estable y con calidad profesional en vuelo.",price:"$399.00",image:"https://www.prometec.net/wp-content/uploads/2018/02/e.jpg"},
+
+      {name:"Kit de micrófono para podcast",description:"Sonido profesional para contenidos digitales.",price:"$150.00",image:"https://m.media-amazon.com/images/I/71mSz6DqYGL._AC_SL1500_.jpg"},
+
+      {name:"Tablet con pantalla OLED",description:"Colores vivos y negro profundo para imágenes increíbles.",price:"$599.99",image:"https://www.oled-info.com/sites/default/files/2024-02/NEC-Lavie-Tab-T14.jpg"},
+
+      {name:"Mouse para edición gráfica",description:"Alta precisión y botones configurables para diseñadores.",price:"$69.99",image:"https://www.silocreativo.com/wp-content/uploads/2021/09/logitech-m570-wireless.jpg"},
+
+      {name:"Reloj inteligente deportivo",description:"Monitoreo extendido de salud y actividad física.",price:"$210.00",image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9BsoJgInvk0r4ApYd3oucmnFNJ7OsFxLggg&s"},
+      {name:"Parlante para exteriores",description:"Resistente al agua y sonido potente para ambientes abiertos.",price:"$120.00",image:"https://ditronics.ec/wp-content/uploads/2024/08/Altavoces-para-exteriores-251-Bose-Ditronics-Ecuador-1.png"},
+      {name:"PC All-in-One 24\"",description:"Computadora compacta con pantalla Full HD y procesador potente.",price:"$799.00",image:"https://pe-media.hptiendaenlinea.com/catalog/product/cache/b3b166914d87ce343d4dc5ec5117b502/6/9/69K50LA-1_T1709057179.png"},
+      {name:"Lámpara USB con carga inalámbrica",description:"Led regulable y espacio para cargar tu smartphone sin cables.",price:"$39.99",image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfuqvQVXolb_s49oYkkg8MIxsyDLQcnH_80A&s"},
+
+
+      {name:"Disco duro externo portátil",description:"Almacenamiento grande y rápido para llevar contigo.",price:"$110.00",image:"https://www.steren.com.ec/media/catalog/product/cache/6f917727ae468960746a5921ee89c7c1/image/20162f58f/disco-duro-externo-de-1-tb.jpg"},
+
+      {name:"Router WiFi portátil",description:"Internet en movimiento con alta velocidad y conexión estable.",price:"$89.00",image:"https://maxitec.vtexassets.com/arquivos/ids/194087/maxitec-steren-router-wi-fi-portatil-4g-conectate-donde-quieras-con-alta-velocidad-com-880-1.jpg?v=638304391131030000"},
+
+      {name:"Cámara de seguridad para exteriores",description:"Monitoreo en HD con resistencia a la intemperie.",price:"$130.00",image:"https://maxitec.vtexassets.com/arquivos/ids/192718/maxitec-vimtag-camara-wi-fi-de-seguridad-para-exteriores-con-intercomunicador-b4-1.jpg?v=638304376652300000"},
+
+      {name:"Smartphone plegable Fold",description:"Tecnología plegable con pantalla AMOLED y cámaras avanzadas.",price:"$1299.99",image:"https://media.es.wired.com/photos/645448d188218b01bf4a1974/16:9/w_1280,c_limit/Pixel%20Fold.png"},
+
+      {name:"Tablet con teclado removible",description:"Versatilidad para trabajo y entretenimiento donde quieras.",price:"$499.00",image:"https://m.media-amazon.com/images/I/718zIZIsNkL._AC_UF894,1000_QL80_.jpg"},
+
+      {name:"Base de carga rápida múltiple",description:"Carga varios dispositivos con eficiencia y estilo.",price:"$59.99",image:"https://m.media-amazon.com/images/I/710fuhi35ZL._AC_UF894,1000_QL80_.jpg"},
+
+      {name:"Alfombrilla para teclado RGB",description:"Iluminación personalizable para tu espacio de trabajo.",price:"$29.99",image:"https://m.media-amazon.com/images/I/711lHrivfJL.jpg"},
+
+      {name:"Smartphone cámara dual",description:"Fotos nítidas y videos 4K en tu smartphone elegante.",price:"$650.00",image:"https://www.profesionalreview.com/wp-content/uploads/2017/05/Qu%C3%A9-ventajas-tienen-los-m%C3%B3viles-con-c%C3%A1mara-dual-01.jpg"},
+
+      {name:"Cargador portátil 20000mAh",description:"Potente y eficiente para varias cargas de tus dispositivos.",price:"$69.99",image:"https://http2.mlstatic.com/D_NQ_NP_816944-MLU78685208489_082024-O.webp"},
+
+      {name:"Micrófono USB para PC",description:"Ideal para streaming y grabaciones caseras con calidad.",price:"$90.00",image:"https://dcimecuador.com/wp-content/uploads/2019/09/AE-MICU04.jpg"},
+
+      {name:"Altavoz inteligente de mesa",description:"Controla tu hogar y reproduce tu música favorita fácilmente.",price:"$110.00",image:"https://systemarket.com.ec/wp-content/uploads/2023/06/AMAZ2.jpg"},
+
+      {name:"Auriculares con cable Hi-Fi",description:"Sonido puro y excelente para audiófilos exigentes.",price:"$25.00",image:"https://i.blogs.es/e23557/sennheiser-hd-559/450_1000.jpg"},
+
+
+      {name:"Tableta híbrida 2 en 1",description:"Laptop y tablet en un solo dispositivo con pantalla táctil.",price:"$850.00",image:"https://pcredcom.com/images/product//import/7/8/6/5/3/78653_10.jpg"},
+
+
+      {name:"Monitor curvo para juegos 27\"",description:"Alta tasa de refresco y baja latencia para gamers.",price:"$420.00",image:"https://alltechnologycs.com.ec/wp-content/uploads/2023/10/monitor-gamer-asus-vg27vh1b-27-pulgadas-curvo-full-hd-1080p-165hz-%E2%80%93-1ms-amd-freesync-altavoces-hdmi-vga.webp"},
+
+      {name:"Disco duro externo SSD 4TB",description:"Velocidad y capacidad para profesionales y creadores.",price:"$499.99",image:"https://m.media-amazon.com/images/I/51k239GGOrL._AC_SL1024_.jpg"},
+
+      {name:"Smartwatch con monitor ECG",description:"Monitoreo avanzado de salud con tecnología ECG integrada.",price:"$299.99",image:"https://m.media-amazon.com/images/I/71NubHKn6PL._AC_UF894,1000_QL80_.jpg"},
+
+      {name:"Altavoz portátil resistente",description:"Diseño robusto para aventuras con sonido poderoso.",price:"$140.00",image:"https://maxitec.vtexassets.com/arquivos/ids/198834/maxitec-jbl-jbl-boombox-3-parlante-bluetooth-portatil-resistente-al-agua-y-al-polvo-15-horas-de-reproduccion-jblboombox3blkm-1.jpg?v=638251530592870000"},
+
+      {name:"Cámara réflex digital",description:"Calidad profesional con múltiples modos y lentes intercambiables.",price:"$949.00",image:"https://upload.wikimedia.org/wikipedia/commons/0/06/EOS_350D.jpg"},
+
+      {name:"Mouse ergonómico vertical",description:"Diseñado para reducir fatiga y mejorar confort.",price:"$49.99",image:"https://nomadaware.com.ec/wp-content/uploads/2021/11/mx-vertical-gallery-02.png"},
+
+      {name:"Proyector láser portátil",description:"Imágenes brillantes y clara definición en tamaño compacto.",price:"$319.95",image:"https://mediaserver.goepson.com/ImConvServlet/imconv/c06ac795ff64147c88d52838bbb91978ce58601c/1200Wx1200H?use=banner&hybrisId=B2C&assetDescr=EF12_top-left_690x460"},
+
+      {name:"Tablet económica 10 pulgadas",description:"Funcional y accesible para navegación y entretenimiento.",price:"$149.99",image:"https://http2.mlstatic.com/D_NQ_NP_2X_736069-MLU77519725749_072024-N.webp"},
+
+      {name:"Kit de cámara para streaming",description:"Solución completa para video en vivo con calidad profesional.",price:"$179.99",image:"https://m.media-amazon.com/images/I/61X5i12qbML._AC_UF894,1000_QL80_.jpg"},
+
+
+      {name:"Cámara instantánea digital mini",description:"Captura y imprime fotos con diseño compacto y retro.",price:"$119.00",image:"https://imagedelivery.net/0tt38OLkrSmHRt7hdItWEA/1d22a459-0aaa-4178-f20b-66fad459b400/public"},
+
+      {name:"Auriculares deportivos inalámbricos",description:"Comodidad y rendimiento para entrenamientos activos.",price:"$79.99",image:"https://m.media-amazon.com/images/I/315Ln091X3L._SL500_.jpg"},
+
+
+
+
+      {name:"Mini consola retro portatil",description:"Juega clásicos en formato portátil y ligero.",price:"$59.95",image:"https://img.kwcdn.com/product/fancy/d910b639-7276-49a5-b17f-35b4d1987f70.jpg?imageMogr2/auto-orient%7CimageView2/2/w/800/q/70/format/webp"},
+
+      {name:"Smart pen con digitalizador",description:"Escribe y dibuja transfiriendo a digital automáticamente.",price:"$129.00",image:"https://m.media-amazon.com/images/I/513nXHrdPdL.jpg"},
+
+      {name:"Laptop para estudiantes",description:"Balance perfecto entre precio y rendimiento para educación.",price:"$599.00",image:"https://hiraoka.com.pe/media/wysiwyg/laptops-hp-estudiantes.jpg"},
+
+      {name:"Cargador inalámbrico para auto",description:"Carga tu smartphone cómodamente mientras conduces.",price:"$39.99",image:"https://m.media-amazon.com/images/I/71No8aow1dL._AC_UF894,1000_QL80_.jpg"},
+
+      {name:"Altavoz de escritorio compacto",description:"Sonido potente y claro para tu área de trabajo.",price:"$49.95",image:"https://dannyrecords.com.ec/wp-content/uploads/2024/02/PARLANTES-DE-COMPUTADORA-MACKIR-CR2-X-CUBE.png"},
+
+
+      {name:"Reloj inteligente para niños",description:"Control parental integrado y funciones básicas para pequeños.",price:"$89.90",image:"https://imagedelivery.net/4fYuQyy-r8_rpBpcY7lH_A/sodimacCO/654901/public"},
+
+      {name:"Teclado gamer mecánico compacto",description:"Teclas rápidas y retroiluminación RGB personalizable.",price:"$120.00",image:"https://compucordoba.com.ar/img/Public/1078-producto-4217-8001-2223.jpg"},
+
+
+
+
+      {name:"Tablet de dibujo profesional",description:"Lápiz digital y pantalla de alta resolución para artistas.",price:"$499.00",image:"https://www.clipstudio.net/wp-content/uploads/2022/09/Galaxy_tabs8.webp"},
+
+      {name:"Sistema de sonido Bluetooth",description:"Disfruta música sin cables con sonido envolvente.",price:"$100.00",image:"https://http2.mlstatic.com/D_Q_NP_607673-MLU74387601123_022024-O.webp"},
+
+      {name:"Mouse inalámbrico para oficina",description:"Ergonómico y con batería de larga duración.",price:"$35.00",image:"https://resource.logitech.com/w_386,ar_1.0,c_limit,f_auto,q_auto,dpr_2.0/d_transparent.gif/content/dam/logitech/en/products/mice/m185/gallery/m185-gallery-1-blue-amr.png?v=1"},
+
+      {name:"Box de streaming 4K",description:"Tus series y películas favoritas en calidad ultra HD.",price:"$129.99",image:"https://i0.wp.com/cyberspaceuio.com/wp-content/uploads/2024/08/watch-onn-pagweb2.webp?fit=495%2C500&ssl=1"},
+
+      {name:"Smartphone con batería extendida",description:"Duración a toda prueba para días intensos.",price:"$549.00",image:"https://http2.mlstatic.com/D_NQ_NP_2X_730602-MEC70039889453_062023-T.webp"},
+
+      {name:"Tableta gráfica ligera",description:"Ideal para diseño creativo con portabilidad total.",price:"$269.99",image:"https://www.steren.com.ec/media/catalog/product/cache/532829604b379f478db69368d14615cd/image/218165114/tableta-grafica-usb-para-dise-o.jpg"},
+
+      {name:"Cargador solar plegable",description:"Recarga ecosostenible para aventuras al aire libre.",price:"$89.99",image:"https://m.media-amazon.com/images/I/81Grj3xiReL._AC_UF894,1000_QL80_.jpg"}
+
+
+
+    ];
+
+    function createProductCard(product) {
+      const card = document.createElement('article');
+      card.className = 'product-card';
+
+      const img = document.createElement('img');
+      img.className = 'product-image';
+      img.src = product.image;
+      img.alt = product.name;
+
+      const info = document.createElement('div');
+      info.className = 'product-info';
+
+      const name = document.createElement('h3');
+      name.className = 'product-name';
+      name.textContent = product.name;
+
+      const price = document.createElement('div');
+      price.className = 'product-price';
+      price.textContent = product.price;
+
+      const desc = document.createElement('p');
+      desc.className = 'product-description';
+      desc.textContent = product.description;
+
+      info.appendChild(name);
+      info.appendChild(price);
+      info.appendChild(desc);
+      card.appendChild(img);
+      card.appendChild(info);
+
+      return card;
+    }
+
+    // Render all products
+    products.forEach(product => {
+      const card = createProductCard(product);
+      productsGrid.appendChild(card);
+    });
+  </script>
+</body>
+</html>
+
